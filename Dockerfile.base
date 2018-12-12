@@ -1,0 +1,118 @@
+# The MIT License
+#
+# Copyright (c) 2018 Jonathan DEKHTIAR, contact@jonathandekhtiar.eu
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+
+ARG repository="cuda"
+FROM nvidia/${repository}:10.0-base-ubuntu16.04
+
+LABEL version="1.0" maintainer="Jonathan DEKHTIAR <contact@jonathandekhtiar.eu>"
+
+# Install the most recent bazel release.
+ENV DEBIAN_FRONTEND=noninteractive \
+    CUDA_VERSION="10-0" \
+    CUDA_PKG_VERSION="10.0" \
+    CUDNN_VERSION="7.4.1.5-1" \
+    NCCL_VERSION="2.3.7-1" \
+    NVINFER_VERSION="5.0.2" \
+    LIBNVINFER_VERSION="5.0.2-1"
+
+WORKDIR /workspace
+
+# Install Basic Dependencies and Python 3
+RUN apt-get update && \
+    apt-get install -qqy \
+        build-essential cmake pkg-config rsync \
+        python python-dev python3 python3-dev \
+        python-numpy python-pip python3-numpy python3-pip \
+        doxygen git vim unzip wget git curl zip g++ \
+        software-properties-common libcurl3 zlib1g-dev \
+        libfreetype6-dev libhdf5-serial-dev libpng12-dev \
+        libzmq3-dev x11-apps mesa-utils locate && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm -f /usr/bin/python && ln -s /usr/bin/python3 /usr/bin/python && \
+    rm -f /usr/bin/pip && ln -s /usr/bin/pip3 /usr/bin/pip && \
+    rm -f /usr/bin/python-config && ln -s /usr/bin/python3.5-config /usr/bin/python-config
+
+# Installing CUDA + CUDA CLI + CuDNN + NCCL + CuBLAS + CuFFT + CuRAND + NvInfer (TRT)
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends --allow-change-held-packages \
+        cuda-command-line-tools-${CUDA_VERSION} \
+        cuda-cublas-${CUDA_VERSION} \
+        cuda-cublas-dev-${CUDA_VERSION} \
+        cuda-cudart-dev-${CUDA_VERSION} \
+        cuda-cufft-${CUDA_VERSION} \
+        cuda-cufft-dev-${CUDA_VERSION} \
+        cuda-cuobjdump-${CUDA_VERSION} \
+        cuda-cupti-${CUDA_VERSION} \
+        cuda-curand-${CUDA_VERSION} \
+        cuda-curand-dev-${CUDA_VERSION} \
+        cuda-cusolver-${CUDA_VERSION} \
+        cuda-cusolver-dev-${CUDA_VERSION} \
+        cuda-cusparse-${CUDA_VERSION} \
+        cuda-cusparse-dev-${CUDA_VERSION} \
+        cuda-driver-dev-${CUDA_VERSION} \
+        cuda-gdb-${CUDA_VERSION} \
+        cuda-gpu-library-advisor-${CUDA_VERSION} \
+        cuda-libraries-${CUDA_VERSION} \
+        cuda-memcheck-${CUDA_VERSION} \
+        cuda-misc-headers-${CUDA_VERSION} \
+        cuda-npp-${CUDA_VERSION} \
+        cuda-nvcc-${CUDA_VERSION} \
+        cuda-nvdisasm-${CUDA_VERSION} \
+        cuda-nvgraph-${CUDA_VERSION} \
+        cuda-nvjpeg-${CUDA_VERSION} \
+        cuda-nvprof-${CUDA_VERSION} \
+        cuda-nvrtc-${CUDA_VERSION} \
+        cuda-nvtx-${CUDA_VERSION} \
+        libcudnn7=${CUDNN_VERSION}+cuda${CUDA_PKG_VERSION} \
+        libcudnn7-dev=${CUDNN_VERSION}+cuda${CUDA_PKG_VERSION} \
+        libnccl2=${NCCL_VERSION}+cuda${CUDA_PKG_VERSION} \
+        libnccl-dev=${NCCL_VERSION}+cuda${CUDA_PKG_VERSION} && \
+    apt-get update && \
+    apt-get install -y \
+        nvinfer-runtime-trt-repo-ubuntu1604-${NVINFER_VERSION}-ga-cuda${CUDA_PKG_VERSION} && \
+    apt-get update && \
+    apt-get install -y \
+        libnvinfer5=${LIBNVINFER_VERSION}+cuda${CUDA_PKG_VERSION} \
+        libnvinfer-dev=${LIBNVINFER_VERSION}+cuda${CUDA_PKG_VERSION} && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Link NCCL libray and header where the build script expects them.
+RUN mkdir /usr/local/cuda-${CUDA_PKG_VERSION}/lib &&  \
+    ln -s /usr/lib/x86_64-linux-gnu/libnccl.so.2 /usr/local/cuda/lib/libnccl.so.2 && \
+    ln -s /usr/include/nccl.h /usr/local/cuda/include/nccl.h
+
+# Installing Common Python Packages Dependencies
+RUN python -m pip install --upgrade pip && \
+    pip --no-cache-dir install \
+        Pillow \
+        h5py \
+        ipykernel \
+        jupyter \
+        keras_applications \
+        keras_preprocessing \
+        matplotlib \
+        numpy \
+        pandas \
+        scipy \
+        sklearn
