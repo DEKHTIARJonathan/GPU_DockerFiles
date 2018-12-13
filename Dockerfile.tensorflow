@@ -20,25 +20,35 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-ARG repository="cudnn_openmpi"
-FROM born2data/${repository}:ubuntu16.04_cuda10.0.130_cudnn7.4.1_openmpi3.4.1
+ARG BASE_CONTAINER="cudnn_openmpi"
+
+FROM born2data/${BASE_CONTAINER}:ubuntu16.04_cuda10.0.130_cudnn7.4.1_openmpi3.4.1
 
 LABEL version="1.0" maintainer="Jonathan DEKHTIAR <contact@jonathandekhtiar.eu>"
+
+ARG BAZEL_VERSION='0.15.0'
+ARG TF_BUILD_BRANCH='r1.12'
+ARG HOROVOD_VERSION='0.15.2'
 
 WORKDIR /workspace
 
 ENV DEBIAN_FRONTEND=noninteractive \
-    CI_BUILD_PYTHON=python
+    CI_BUILD_PYTHON=python \
+    HOROVOD_WITH_TENSORFLOW='1' \
+    HOROVOD_WITHOUT_TENSORFLOW=''
+
+RUN bash -c 'echo -e "###################################################"' && \
+    bash -c 'echo -e "   [-] BAZEL_VERSION   = $BAZEL_VERSION"' && \
+    bash -c 'echo -e "   [-] TF_BUILD_BRANCH = $TF_BUILD_BRANCH"' && \
+    bash -c 'echo -e "   [-] HOROVOD_VERSION = $HOROVOD_VERSION"' && \
+    bash -c 'echo -e "###################################################"'
 
 # Set up Bazel.
-
 # Running bazel inside a `docker build` command causes trouble, cf:
 # https://github.com/bazelbuild/bazel/issues/134
 # The easiest solution is to set up a bazelrc file forcing --batch.
-
 # Similarly, we need to work around sandboxing issues:
 # https://github.com/bazelbuild/bazel/issues/418
-ENV BAZEL_VERSION='0.15.0'
 
 RUN rm -f /etc/bazel.bazelrc && \
     echo "startup --batch" >> /etc/bazel.bazelrc && \
@@ -67,8 +77,6 @@ RUN rm -f /etc/bazel.bazelrc && \
 #    [*] RTX 2080 (Ti): 7.5
 #
 # ======== CUDA Compute Capabilities ========
-
-ENV TF_BUILD_BRANCH='r1.12'
 
 ENV LD_LIBRARY_PATH="/usr/local/lib:/usr/local/cuda/lib64:${LD_LIBRARY_PATH}" \
     LD_LIBRARY_PATH="/usr/local/cuda/lib64/stubs:${LD_LIBRARY_PATH}" \
@@ -115,11 +123,7 @@ RUN cd / && rm -rf /tensorflow && \
     bazel-bin/tensorflow/tools/pip_package/build_pip_package /pip_pkg --gpu && \
     pip --no-cache-dir install --upgrade /pip_pkg/tensorflow_*.whl && \
     rm -f /usr/local/cuda/lib64/stubs/libcuda.so.1 && \
-    rm -rf /root/.cache
-
-ENV HOROVOD_VERSION='0.15.2' \
-    HOROVOD_WITH_TENSORFLOW='1' \
-    HOROVOD_WITHOUT_TENSORFLOW=''
+    rm -rf /root/.
 
 # Install Horovod, temporarily using CUDA stubs
 RUN ldconfig /usr/local/cuda/targets/x86_64-linux/lib/stubs && \

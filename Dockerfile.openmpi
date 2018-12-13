@@ -20,14 +20,15 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-ARG repository="cudnn"
-FROM born2data/${repository}:ubuntu16.04_cuda10.0.130_cudnn7.4.1
+ARG BASE_CONTAINER="cudnn"
+
+FROM born2data/${BASE_CONTAINER}:ubuntu16.04_cuda10.0.130_cudnn7.4.1
+
+ARG OPENMPI_VERSION="3.1.2"
 
 ENV HOROVOD_GPU_ALLREDUCE=NCCL \
     HOROVOD_WITHOUT_TENSORFLOW='1' \
-    HOROVOD_WITHOUT_PYTORCH='1' \
-    OPENMPI_BASE_VERSION="3.1" \
-    OPENMPI_VERSION="3.1.2"
+    HOROVOD_WITHOUT_PYTORCH='1'
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         build-essential \
@@ -44,7 +45,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rm -rf /var/lib/apt/lists/*
 
 # Install Open MPI
-RUN mkdir /tmp/openmpi && \
+RUN export OPENMPI_BASE_VERSION=$(echo $OPENMPI_VERSION | sed 's/\(.*\)\..*/\1/') && \
+    bash -c 'echo -e "###################################################"' && \
+    bash -c 'echo -e "   [-] OPENMPI_VERSION      = $OPENMPI_VERSION"' && \
+    bash -c 'echo -e "   [-] OPENMPI_BASE_VERSION = $OPENMPI_BASE_VERSION"' && \
+    bash -c 'echo -e "###################################################"' && \
+    mkdir /tmp/openmpi && \
     cd /tmp/openmpi && \
     wget https://www.open-mpi.org/software/ompi/v${OPENMPI_BASE_VERSION}/downloads/openmpi-${OPENMPI_VERSION}.tar.gz && \
     tar zxf openmpi-${OPENMPI_VERSION}.tar.gz && \
