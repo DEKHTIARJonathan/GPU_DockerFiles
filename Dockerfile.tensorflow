@@ -123,7 +123,7 @@ RUN cd / && rm -rf /tensorflow && \
     bazel-bin/tensorflow/tools/pip_package/build_pip_package /pip_pkg --gpu && \
     pip --no-cache-dir install --upgrade /pip_pkg/tensorflow_*.whl && \
     rm -f /usr/local/cuda/lib64/stubs/libcuda.so.1 && \
-    rm -rf /root/.
+    rm -rf /root/.cache
 
 # Install Horovod, temporarily using CUDA stubs
 RUN ldconfig /usr/local/cuda/targets/x86_64-linux/lib/stubs && \
