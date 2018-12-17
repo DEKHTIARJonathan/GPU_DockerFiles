@@ -28,8 +28,8 @@ FROM born2data/${BASE_CONTAINER}:${BASE_CONTAINER_TAG}
 LABEL version="1.0" maintainer="Jonathan DEKHTIAR <contact@jonathandekhtiar.eu>"
 
 ARG BAZEL_VERSION='0.19.2'
-ARG TF_BUILD_BRANCH='r1.12'
 ARG TF_REPO='https://github.com/tensorflow/tensorflow.git'
+ARG TF_BUILD_BRANCH='r1.12'
 ARG HOROVOD_VERSION='0.15.2'
 
 WORKDIR /workspace
@@ -39,11 +39,12 @@ ENV DEBIAN_FRONTEND=noninteractive \
     HOROVOD_WITH_TENSORFLOW='1' \
     HOROVOD_WITHOUT_TENSORFLOW=''
 
-RUN bash -c 'echo -e "###################################################"' && \
+RUN bash -c 'echo -e "###############################################################"' && \
     bash -c 'echo -e "   [-] BAZEL_VERSION   = $BAZEL_VERSION"' && \
+    bash -c 'echo -e "   [-] TF_REPO         = $TF_REPO"' && \
     bash -c 'echo -e "   [-] TF_BUILD_BRANCH = $TF_BUILD_BRANCH"' && \
     bash -c 'echo -e "   [-] HOROVOD_VERSION = $HOROVOD_VERSION"' && \
-    bash -c 'echo -e "###################################################"'
+    bash -c 'echo -e "###############################################################"'
 
 # Set up Bazel.
 # Running bazel inside a `docker build` command causes trouble, cf:
