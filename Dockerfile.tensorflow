@@ -21,8 +21,9 @@
 # THE SOFTWARE.
 
 ARG BASE_CONTAINER="cudnn_openmpi"
+ARG BASE_CONTAINER_TAG="ubuntu16.04_cuda10.0.130_cudnn7.4.1_openmpi3.4.1"
 
-FROM born2data/${BASE_CONTAINER}:ubuntu16.04_cuda10.0.130_cudnn7.4.1_openmpi3.4.1
+FROM born2data/${BASE_CONTAINER}:${BASE_CONTAINER_TAG}
 
 LABEL version="1.0" maintainer="Jonathan DEKHTIAR <contact@jonathandekhtiar.eu>"
 
