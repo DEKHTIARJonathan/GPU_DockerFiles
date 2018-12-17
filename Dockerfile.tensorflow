@@ -26,7 +26,7 @@ FROM born2data/${BASE_CONTAINER}:ubuntu16.04_cuda10.0.130_cudnn7.4.1_openmpi3.4.
 
 LABEL version="1.0" maintainer="Jonathan DEKHTIAR <contact@jonathandekhtiar.eu>"
 
-ARG BAZEL_VERSION='0.15.0'
+ARG BAZEL_VERSION='0.19.2'
 ARG TF_BUILD_BRANCH='r1.12'
 ARG TF_REPO='https://github.com/tensorflow/tensorflow.git'
 ARG HOROVOD_VERSION='0.15.2'
