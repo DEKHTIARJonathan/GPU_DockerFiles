@@ -64,8 +64,9 @@ docker push born2data/cudnn_openmpi_gl:ubuntu16.04_cuda10.0.130_cudnn7.4.1_openm
 ```
 docker build -t born2data/tensorflow:ubuntu16.04_cuda10.0.130_cudnn7.4.1_openmpi3.4.1_hvd0.15.2_tf1.12.0 \
   --build-arg BASE_CONTAINER=cudnn_openmpi \
-  --build-arg BAZEL_VERSION='0.15.0' \
+  --build-arg BAZEL_VERSION='0.19.2' \
   --build-arg TF_BUILD_BRANCH='r1.12' \
+  --build-arg  TF_REPO='https://github.com/tensorflow/tensorflow.git' \
   --build-arg HOROVOD_VERSION='0.15.2' \
   - < Dockerfile.tensorflow
 
@@ -77,8 +78,9 @@ docker push born2data/tensorflow:ubuntu16.04_cuda10.0.130_cudnn7.4.1_openmpi3.4.
 ```
 docker build -t born2data/tensorflow_gl:ubuntu16.04_cuda10.0.130_cudnn7.4.1_openmpi3.4.1_hvd0.15.2_tf1.12.0  \
   --build-arg BASE_CONTAINER=cudnn_openmpi_gl \
-  --build-arg BAZEL_VERSION='0.15.0' \
+  --build-arg BAZEL_VERSION='0.19.2' \
   --build-arg TF_BUILD_BRANCH='r1.12' \
+  --build-arg  TF_REPO='https://github.com/tensorflow/tensorflow.git' \
   --build-arg HOROVOD_VERSION='0.15.2' \
   - < Dockerfile.tensorflow
 

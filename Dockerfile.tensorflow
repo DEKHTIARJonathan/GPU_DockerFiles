@@ -28,6 +28,7 @@ LABEL version="1.0" maintainer="Jonathan DEKHTIAR <contact@jonathandekhtiar.eu>"
 
 ARG BAZEL_VERSION='0.15.0'
 ARG TF_BUILD_BRANCH='r1.12'
+ARG TF_REPO='https://github.com/tensorflow/tensorflow.git'
 ARG HOROVOD_VERSION='0.15.2'
 
 WORKDIR /workspace
@@ -106,7 +107,7 @@ ENV LD_LIBRARY_PATH="/usr/local/lib:/usr/local/cuda/lib64:${LD_LIBRARY_PATH}" \
 
 # Get the TF branch for later build
 RUN cd / && rm -rf /tensorflow && \
-    git clone --branch=$TF_BUILD_BRANCH --depth=1 https://github.com/tensorflow/tensorflow.git /tensorflow && \
+    git clone --branch=$TF_BUILD_BRANCH --depth=1 $TF_REPO /tensorflow && \
     cd /tensorflow && \
     rm -f /usr/local/cuda/lib64/stubs/libcuda.so.1 && \
     ln -s /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/stubs/libcuda.so.1 && \
