@@ -28,7 +28,7 @@ FROM nvidia/${BASE_CONTAINER}:${CUDA_BASE}-base-ubuntu16.04
 LABEL version="1.0" maintainer="Jonathan DEKHTIAR <contact@jonathandekhtiar.eu>"
 
 ARG CUDA_BASE
-ARG CUDNN_VERSION="7.4.1.5-1"
+ARG CUDNN_VERSION="7.4.2.24-1"
 ARG NCCL_VERSION="2.3.7-1"
 ARG LIBNVINFER_VERSION="5.0.2-1"
 
@@ -46,13 +46,15 @@ RUN bash -c 'echo -e "###################################################"' && \
 # Install Basic Dependencies and Python 3
 RUN apt-get update && \
     apt-get install -qqy \
+        apt-utils autoconf libtool nasm \
         build-essential cmake pkg-config rsync \
         python python-dev python3 python3-dev \
         python-numpy python-pip python3-numpy python3-pip \
-        doxygen git vim unzip wget git curl zip g++ \
+        doxygen git vim unzip wget curl zip g++ \
         software-properties-common libcurl3 zlib1g-dev \
         libfreetype6-dev libhdf5-serial-dev libpng12-dev \
-        libzmq3-dev x11-apps mesa-utils locate && \
+        libzmq3-dev x11-apps mesa-utils locate \
+        ca-certificates libjpeg-dev libpng-dev && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     rm -f /usr/bin/python && ln -s /usr/bin/python3 /usr/bin/python && \
@@ -68,34 +70,19 @@ RUN export NVINFER_VERSION=$(echo ${LIBNVINFER_VERSION%%-*}) && \
     bash -c 'echo -e "###################################################"' && \
     apt-get update && \
     apt-get install -y --no-install-recommends --allow-change-held-packages \
-        cuda-command-line-tools-${CUDA_PKG_VERSION} \
-        cuda-cublas-${CUDA_PKG_VERSION} \
-        cuda-cublas-dev-${CUDA_PKG_VERSION} \
-        cuda-cudart-dev-${CUDA_PKG_VERSION} \
-        cuda-cufft-${CUDA_PKG_VERSION} \
-        cuda-cufft-dev-${CUDA_PKG_VERSION} \
-        cuda-cuobjdump-${CUDA_PKG_VERSION} \
-        cuda-cupti-${CUDA_PKG_VERSION} \
-        cuda-curand-${CUDA_PKG_VERSION} \
-        cuda-curand-dev-${CUDA_PKG_VERSION} \
-        cuda-cusolver-${CUDA_PKG_VERSION} \
-        cuda-cusolver-dev-${CUDA_PKG_VERSION} \
-        cuda-cusparse-${CUDA_PKG_VERSION} \
-        cuda-cusparse-dev-${CUDA_PKG_VERSION} \
-        cuda-driver-dev-${CUDA_PKG_VERSION} \
-        cuda-gdb-${CUDA_PKG_VERSION} \
-        cuda-gpu-library-advisor-${CUDA_PKG_VERSION} \
+        cuda-compat-${CUDA_PKG_VERSION} \
+        cuda-compiler-${CUDA_PKG_VERSION} \
+        cuda-core-${CUDA_PKG_VERSION} \
+        cuda-npp-dev-${CUDA_PKG_VERSION} \
+        cuda-nvjpeg-dev-${CUDA_PKG_VERSION} \
+        cuda-nvml-dev-${CUDA_PKG_VERSION} \
+        cuda-nvprune-${CUDA_PKG_VERSION} \
+        cuda-nvvp-${CUDA_PKG_VERSION} \
+        cuda-runtime-${CUDA_PKG_VERSION} \
+        cuda-toolkit-${CUDA_PKG_VERSION} \
+        cuda-tools-${CUDA_PKG_VERSION} \
         cuda-libraries-${CUDA_PKG_VERSION} \
-        cuda-memcheck-${CUDA_PKG_VERSION} \
-        cuda-misc-headers-${CUDA_PKG_VERSION} \
-        cuda-npp-${CUDA_PKG_VERSION} \
-        cuda-nvcc-${CUDA_PKG_VERSION} \
-        cuda-nvdisasm-${CUDA_PKG_VERSION} \
-        cuda-nvgraph-${CUDA_PKG_VERSION} \
-        cuda-nvjpeg-${CUDA_PKG_VERSION} \
-        cuda-nvprof-${CUDA_PKG_VERSION} \
-        cuda-nvrtc-${CUDA_PKG_VERSION} \
-        cuda-nvtx-${CUDA_PKG_VERSION} \
+        cuda-libraries-dev-${CUDA_PKG_VERSION} \
         libcudnn7=${CUDNN_VERSION}+cuda${CUDA_BASE} \
         libcudnn7-dev=${CUDNN_VERSION}+cuda${CUDA_BASE} \
         libnccl2=${NCCL_VERSION}+cuda${CUDA_BASE} \
@@ -107,6 +94,7 @@ RUN export NVINFER_VERSION=$(echo ${LIBNVINFER_VERSION%%-*}) && \
     apt-get install -y \
         libnvinfer5=${LIBNVINFER_VERSION}+cuda${CUDA_BASE} \
         libnvinfer-dev=${LIBNVINFER_VERSION}+cuda${CUDA_BASE} && \
+    apt-get install -y nvidia-cuda-toolkit && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 

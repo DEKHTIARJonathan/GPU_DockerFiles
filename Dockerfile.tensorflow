@@ -81,11 +81,12 @@ RUN rm -f /etc/bazel.bazelrc && \
 #
 # ======== CUDA Compute Capabilities ========
 
-ENV LD_LIBRARY_PATH="/usr/local/lib:/usr/local/cuda/lib64:${LD_LIBRARY_PATH}" \
-    LD_LIBRARY_PATH="/usr/local/cuda/lib64/stubs:${LD_LIBRARY_PATH}" \
-    LD_LIBRARY_PATH="/usr/local/cuda/extras/CUPTI/lib64:${LD_LIBRARY_PATH}" \
-    LD_LIBRARY_PATH="/usr/lib/x86_64-linux-gnu/:${LD_LIBRARY_PATH}" \
-    BLAS_INCLUDE='/usr/local/cuda/targets/x86_64-linux/include' \
+ENV LD_LIBRARY_PATH="/usr/local/lib:/usr/local/cuda/lib64"
+ENV LD_LIBRARY_PATH="/usr/local/cuda/lib64/stubs:${LD_LIBRARY_PATH}"
+ENV LD_LIBRARY_PATH="/usr/local/cuda/extras/CUPTI/lib64:${LD_LIBRARY_PATH}"
+ENV LD_LIBRARY_PATH="/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH}"
+
+ENV BLAS_INCLUDE='/usr/local/cuda/targets/x86_64-linux/include' \
     BLAS_LIB='/usr/local/cuda/targets/x86_64-linux/lib' \
     CPLUS_INCLUDE_PATH='/usr/local/cuda/$CPLUS_INCLUDE_PATH' \
     CUDA_TOOLKIT_PATH="/usr/local/cuda" \
@@ -126,7 +127,8 @@ RUN cd / && rm -rf /tensorflow && \
     bazel-bin/tensorflow/tools/pip_package/build_pip_package /pip_pkg --gpu && \
     pip --no-cache-dir install --upgrade /pip_pkg/tensorflow_*.whl && \
     rm -f /usr/local/cuda/lib64/stubs/libcuda.so.1 && \
-    rm -rf /root/.cache
+    rm -rf /root/.cache && \
+    rm -rf /pip_pkg
 
 # Install Horovod, temporarily using CUDA stubs
 RUN ldconfig /usr/local/cuda/targets/x86_64-linux/lib/stubs && \
