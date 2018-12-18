@@ -70,10 +70,7 @@ RUN export NVINFER_VERSION=$(echo ${LIBNVINFER_VERSION%%-*}) && \
     bash -c 'echo -e "###################################################"' && \
     apt-get update && \
     apt-get install -y --no-install-recommends --allow-change-held-packages \
-        cuda-command-line-tools-${CUDA_PKG_VERSION} \            
-        cuda-compat-${CUDA_PKG_VERSION} \
-        cuda-compiler-${CUDA_PKG_VERSION} \
-        cuda-core-${CUDA_PKG_VERSION} \
+        cuda-command-line-tools-${CUDA_PKG_VERSION} \
         cuda-cublas-${CUDA_PKG_VERSION} \
         cuda-cublas-dev-${CUDA_PKG_VERSION} \
         cuda-cudart-dev-${CUDA_PKG_VERSION} \
@@ -91,6 +88,7 @@ RUN export NVINFER_VERSION=$(echo ${LIBNVINFER_VERSION%%-*}) && \
         cuda-gdb-${CUDA_PKG_VERSION} \
         cuda-gpu-library-advisor-${CUDA_PKG_VERSION} \
         cuda-libraries-${CUDA_PKG_VERSION} \
+        cuda-libraries-dev-${CUDA_PKG_VERSION} \
         cuda-memcheck-${CUDA_PKG_VERSION} \
         cuda-misc-headers-${CUDA_PKG_VERSION} \
         cuda-npp-${CUDA_PKG_VERSION} \
@@ -108,8 +106,6 @@ RUN export NVINFER_VERSION=$(echo ${LIBNVINFER_VERSION%%-*}) && \
         cuda-nvvp-${CUDA_PKG_VERSION} \
         cuda-tools-${CUDA_PKG_VERSION} \
         cuda-toolkit-${CUDA_PKG_VERSION} \
-        cuda-libraries-${CUDA_PKG_VERSION} \
-        cuda-libraries-dev-${CUDA_PKG_VERSION} \
         libcudnn7=${CUDNN_VERSION}+cuda${CUDA_BASE} \
         libcudnn7-dev=${CUDNN_VERSION}+cuda${CUDA_BASE} \
         libnccl2=${NCCL_VERSION}+cuda${CUDA_BASE} \
