@@ -26,6 +26,7 @@ ARG BASE_CONTAINER_TAG="ubuntu16.04_cuda10.0.130_cudnn7.4.1_openmpi3.4.1_hvd0.15
 FROM born2data/${BASE_CONTAINER}:${BASE_CONTAINER_TAG}
 
 ARG DALI_BUILD_BRANCH='v0.5.0'
+ARG BUILD_DALI_FOR_TF='ON'
 ARG JPEG_TURBO_VERSION='1.5.3'
 ARG BOOST_VERSION='1.66.0'
 ARG PROTOBUF_VERSION='3.5.1'
@@ -113,9 +114,9 @@ RUN cd /opt/ && \
 RUN git clone --branch=$DALI_BUILD_BRANCH --recursive https://github.com/NVIDIA/dali /opt/dali && \
     mkdir /opt/dali/build && cd /opt/dali/build && \
     cmake \
-        -DBUILD_TENSORFLOW=ON \
+        -DBUILD_TENSORFLOW=${BUILD_DALI_FOR_TF} \
         -DBUILD_PYTHON=ON \
-        -DBUILD_LMDB=ON  \
+        -DBUILD_LMDB=OFF  \
         .. && \
     make -j"$(nproc)" && \
     pip install /opt/dali/build/dali/python
