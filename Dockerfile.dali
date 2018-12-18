@@ -113,12 +113,6 @@ RUN cd /opt/ && \
 RUN git clone --branch=$DALI_BUILD_BRANCH --recursive https://github.com/NVIDIA/dali /opt/dali && \
     mkdir /opt/dali/build && cd /opt/dali/build && \
     cmake .. && \
-    make -j"$(nproc)"
-
-# NVIDIA DALI
-RUN git clone --branch=$DALI_BUILD_BRANCH --recursive https://github.com/NVIDIA/dali /opt/dali && \
-    mkdir /opt/dali/build && cd /opt/dali/build && \
-    cmake .. && \
     make -j"$(nproc)" && \
     pip install /opt/dali/build/dali/python && \
     rm -rf /opt/dali
