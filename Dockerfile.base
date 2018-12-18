@@ -72,7 +72,6 @@ RUN export NVINFER_VERSION=$(echo ${LIBNVINFER_VERSION%%-*}) && \
     apt-get install -y --no-install-recommends --allow-change-held-packages \
         cuda-compat-${CUDA_PKG_VERSION} \
         cuda-compiler-${CUDA_PKG_VERSION} \
-        cuda-core-${CUDA_PKG_VERSION} \
         cuda-npp-dev-${CUDA_PKG_VERSION} \
         cuda-nvjpeg-dev-${CUDA_PKG_VERSION} \
         cuda-nvml-dev-${CUDA_PKG_VERSION} \
