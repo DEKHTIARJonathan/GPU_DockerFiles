@@ -76,7 +76,6 @@ RUN export NVINFER_VERSION=$(echo ${LIBNVINFER_VERSION%%-*}) && \
         cuda-nvml-dev-${CUDA_PKG_VERSION} \
         cuda-nvprune-${CUDA_PKG_VERSION} \
         cuda-nvvp-${CUDA_PKG_VERSION} \
-        cuda-runtime-${CUDA_PKG_VERSION} \
         cuda-toolkit-${CUDA_PKG_VERSION} \
         cuda-libraries-${CUDA_PKG_VERSION} \
         cuda-libraries-dev-${CUDA_PKG_VERSION} \
