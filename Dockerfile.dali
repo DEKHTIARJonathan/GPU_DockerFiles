@@ -43,8 +43,7 @@ RUN bash -c 'echo -e "###################################################"' && \
 
 # Boost
 RUN cd /usr/local && \
-    export BOOST_PKG_VERSION=$(echo ${BOOST_VERSION} | sed 's/\./-/' ) && \
-    echo "BOOST_PKG_VERSION = $BOOST_PKG_VERSION" && \
+    export BOOST_PKG_VERSION=$(echo ${BOOST_VERSION} | sed 's/\./\_/g' ) && \
     curl -L https://dl.bintray.com/boostorg/release/${BOOST_VERSION}/source/boost_${BOOST_PKG_VERSION}.tar.gz | tar -xzf - && \
     ln -s ../boost_${BOOST_PKG_VERSION}/boost include/boost
 
