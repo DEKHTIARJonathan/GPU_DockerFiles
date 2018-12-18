@@ -110,13 +110,16 @@ RUN cd /opt/ && \
     make -j"$(grep ^processor /proc/cpuinfo | wc -l)" install 2>&1 >/dev/null && \
     rm -rf /opt/libjpeg-turbo-${JPEG_TURBO_VERSION}
 
-# NVIDIA DALI
+ENV LD_LIBRARY_PATH="/tensorflow:${LD_LIBRARY_PATH}"
+
 RUN git clone --branch=$DALI_BUILD_BRANCH --recursive https://github.com/NVIDIA/dali /opt/dali && \
     mkdir /opt/dali/build && cd /opt/dali/build && \
     cmake \
-        -DBUILD_TENSORFLOW=${BUILD_DALI_FOR_TF} \
-        -DBUILD_PYTHON=ON \
-        -DBUILD_LMDB=OFF  \
+        -D CMAKE_INSTALL_PREFIX=. \
+        -D BUILD_TENSORFLOW=${BUILD_DALI_FOR_TF} \
+        -D DALI_TF_SRCS="/tensorflow" \
+        -D BUILD_PYTHON=ON \
+        -D BUILD_LMDB=OFF  \
         .. && \
     make -j"$(nproc)" && \
     pip install /opt/dali/build/dali/python
