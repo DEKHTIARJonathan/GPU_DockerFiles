@@ -115,8 +115,10 @@ RUN git clone --branch=$DALI_BUILD_BRANCH --recursive https://github.com/NVIDIA/
     cmake .. && \
     make -j"$(nproc)"
 
-RUN cd /opt/dali && \
-    pip wheel -v /opt/dali/python \
-        --build-option --python-tag=$(basename /opt/python/cp${PYV}-*) \
-        --build-option --plat-name=manylinux1_x86_64 && \
-    /opt/dali/python/bundle-wheel.sh nvidia_dali-*.whl
+# NVIDIA DALI
+RUN git clone --branch=$DALI_BUILD_BRANCH --recursive https://github.com/NVIDIA/dali /opt/dali && \
+    mkdir /opt/dali/build && cd /opt/dali/build && \
+    cmake .. && \
+    make -j"$(nproc)" && \
+    pip install /opt/dali/build/dali/python && \
+    rm -rf /opt/dali
