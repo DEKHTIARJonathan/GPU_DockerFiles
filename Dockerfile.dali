@@ -1,0 +1,123 @@
+# The MIT License
+#
+# Copyright (c) 2018 Jonathan DEKHTIAR, contact@jonathandekhtiar.eu
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+
+ARG BASE_CONTAINER="tensorflow"
+ARG BASE_CONTAINER_TAG="ubuntu16.04_cuda10.0.130_cudnn7.4.1_openmpi3.4.1_hvd0.15.2_tf_xla_fix"
+
+FROM born2data/${BASE_CONTAINER}:${BASE_CONTAINER_TAG}
+
+ARG DALI_BUILD_BRANCH='v0.5.0'
+ARG JPEG_TURBO_VERSION='1.5.3'
+ARG BOOST_VERSION='1.66.0'
+ARG PROTOBUF_VERSION='3.5.1'
+ARG OPENCV_VERSION='3.4.3'
+ARG FFMPEG_VERSION='3.4.2'
+
+RUN bash -c 'echo -e "###################################################"' && \
+    bash -c 'echo -e "   [-] DALI_BUILD_BRANCH  = $DALI_BUILD_BRANCH"' && \
+    bash -c 'echo -e "   [-] JPEG_TURBO_VERSION = $JPEG_TURBO_VERSION"' && \
+    bash -c 'echo -e "   [-] BOOST_VERSION      = $BOOST_VERSION"' && \
+    bash -c 'echo -e "   [-] PROTOBUF_VERSION   = $PROTOBUF_VERSION"' && \
+    bash -c 'echo -e "   [-] OPENCV_VERSION     = $OPENCV_VERSION"' && \
+    bash -c 'echo -e "   [-] FFMPEG_VERSION     = $FFMPEG_VERSION"' && \
+    bash -c 'echo -e "###################################################"'
+
+# Boost
+RUN cd /usr/local && \
+    export BOOST_PKG_VERSION=$(echo ${BOOST_VERSION} | sed 's/\./-/' ) && \
+    echo "BOOST_PKG_VERSION = $BOOST_PKG_VERSION" && \
+    curl -L https://dl.bintray.com/boostorg/release/${BOOST_VERSION}/source/boost_${BOOST_PKG_VERSION}.tar.gz | tar -xzf - && \
+    ln -s ../boost_${BOOST_PKG_VERSION}/boost include/boost
+
+# protobuf v3.5.1
+RUN cd /opt/ && \
+    curl -L https://github.com/google/protobuf/releases/download/v${PROTOBUF_VERSION}/protobuf-all-${PROTOBUF_VERSION}.tar.gz | tar -xzf - && \
+    cd /opt/protobuf-${PROTOBUF_VERSION} && \
+    ./autogen.sh && \
+    ./configure CXXFLAGS="-fPIC" --prefix=/usr/local --disable-shared 2>&1 > /dev/null && \
+    make -j"$(grep ^processor /proc/cpuinfo | wc -l)" install 2>&1 > /dev/null && \
+    rm -rf /opt/protobuf-${PROTOBUF_VERSION}
+
+# LMDB
+# COPY docker/Makefile-lmdb.patch /tmp
+# RUN LMDB_VERSION=0.9.22 && \
+#    git clone -b LMDB_${LMDB_VERSION} --single-branch https://github.com/LMDB/lmdb && \
+#    cd /lmdb/libraries/liblmdb && \
+#    patch -p3 < /tmp/Makefile-lmdb.patch && \
+#    rm -f /tmp/Makefile-lmdb.patch && \
+#    make -j"$(grep ^processor /proc/cpuinfo | wc -l)" install && \0
+#    rm -rf /lmdb
+
+# OpenCV
+RUN cd /opt/ && \
+    curl -L https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.tar.gz | tar -xzf - && \
+    cd /opt/opencv-${OPENCV_VERSION} && mkdir build && cd build && \
+    cmake -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=/usr/local \
+          -DBUILD_SHARED_LIBS=OFF \
+          -DWITH_CUDA=OFF -DWITH_1394=OFF -DWITH_IPP=OFF -DWITH_OPENCL=OFF -DWITH_GTK=OFF \
+          -DBUILD_DOCS=OFF -DBUILD_TESTS=OFF -DBUILD_PERF_TESTS=OFF \
+          -DBUILD_opencv_cudalegacy=OFF -DBUILD_opencv_stitching=OFF .. && \
+    make -j"$(grep ^processor /proc/cpuinfo | wc -l)" install && \
+    rm -rf /opt/opencv-${OPENCV_VERSION}
+
+RUN cd /opt/ && \
+    wget -q http://ffmpeg.org/releases/ffmpeg-${FFMPEG_VERSION}.tar.bz2 && \
+    tar xf ffmpeg-$FFMPEG_VERSION.tar.bz2 && \
+    rm ffmpeg-$FFMPEG_VERSION.tar.bz2 && \
+    cd ffmpeg-$FFMPEG_VERSION && \
+    ./configure \
+      --prefix=/usr/local \
+      --disable-static \
+      --disable-all \
+      --disable-autodetect \
+      --disable-iconv \
+      --enable-shared \
+      --enable-avformat \
+      --enable-avcodec \
+      --enable-avfilter \
+      --enable-protocol=file \
+      --enable-demuxer=mov,matroska \
+      --enable-bsf=h264_mp4toannexb,hevc_mp4toannexb && \
+    make -j"$(grep ^processor /proc/cpuinfo | wc -l)" && \
+    make install && \
+    cd /opt/ && rm -rf ffmpeg-$FFMPEG_VERSION
+
+# LibJPEG-Turbo
+RUN cd /opt/ && \
+    curl -L https://github.com/libjpeg-turbo/libjpeg-turbo/archive/${JPEG_TURBO_VERSION}.tar.gz | tar -xzf - && \
+    cd /opt/libjpeg-turbo-${JPEG_TURBO_VERSION} && \
+    autoreconf -fiv && \
+    ./configure --enable-shared --prefix=/usr/local 2>&1 >/dev/null && \
+    make -j"$(grep ^processor /proc/cpuinfo | wc -l)" install 2>&1 >/dev/null && \
+    rm -rf /opt/libjpeg-turbo-${JPEG_TURBO_VERSION}
+
+# NVIDIA DALI
+RUN git clone --branch=$DALI_BUILD_BRANCH --recursive https://github.com/NVIDIA/dali /opt/dali && \
+    mkdir /opt/dali/build && cd /opt/dali/build && \
+    cmake .. && \
+    make -j"$(nproc)"
+
+RUN cd /opt/dali && \
+    pip wheel -v /opt/dali/python \
+        --build-option --python-tag=$(basename /opt/python/cp${PYV}-*) \
+        --build-option --plat-name=manylinux1_x86_64 && \
+    /opt/dali/python/bundle-wheel.sh nvidia_dali-*.whl
