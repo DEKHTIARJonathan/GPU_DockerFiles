@@ -21,7 +21,7 @@
 # THE SOFTWARE.
 
 ARG BASE_CONTAINER="tensorflow"
-ARG BASE_CONTAINER_TAG="ubuntu16.04_cuda10.0.130_cudnn7.4.1_openmpi3.4.1_hvd0.15.2_tf_xla_fix"
+ARG BASE_CONTAINER_TAG="ubuntu16.04_cuda10.0_cudnn7.4.2_openmpi3.4.1_hvd0.15.2_tf_xla_fix"
 
 FROM born2data/${BASE_CONTAINER}:${BASE_CONTAINER_TAG}
 
