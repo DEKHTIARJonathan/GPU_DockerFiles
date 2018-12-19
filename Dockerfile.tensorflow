@@ -105,9 +105,9 @@ ENV LD_LIBRARY_PATH="/usr/local/lib:/usr/lib/x86_64-linux-gnu:/usr/local/cuda/li
     TF_NEED_TENSORRT=0
 
 # Get the TF branch for later build
-RUN cd / && rm -rf /tensorflow && \
-    git clone --branch=$TF_BUILD_BRANCH --depth=1 $TF_REPO /tensorflow && \
-    cd /tensorflow && \
+RUN rm -rf /opt/tensorflow && \
+    git clone --branch=$TF_BUILD_BRANCH --depth=1 $TF_REPO /opt/tensorflow && \
+    cd /opt/tensorflow && \
     rm -f /usr/local/cuda/lib64/stubs/libcuda.so.1 && \
     ln -s /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/stubs/libcuda.so.1 && \
     echo "/usr/local/cuda/lib64" > /etc/ld.so.conf.d/cuda.conf && \
@@ -119,12 +119,13 @@ RUN cd / && rm -rf /tensorflow && \
         --cxxopt="-D_GLIBCXX_USE_CXX11_ABI=0" \
         --action_env=LD_LIBRARY_PATH=${LD_LIBRARY_PATH} \
         tensorflow/tools/pip_package:build_pip_package && \
-    mkdir /pip_pkg && \
-    bazel-bin/tensorflow/tools/pip_package/build_pip_package /pip_pkg --gpu && \
-    pip --no-cache-dir install --upgrade /pip_pkg/tensorflow_*.whl && \
+    mkdir /opt/tensorflow/pip_pkg && \
+    bazel-bin/tensorflow/tools/pip_package/build_pip_package /opt/tensorflow/pip_pkg --gpu && \
+    pip --no-cache-dir install --upgrade /opt/tensorflow/pip_pkg/tensorflow_*.whl && \
     rm -f /usr/local/cuda/lib64/stubs/libcuda.so.1 && \
-    rm -rf /root/.cache && \
-    rm -rf /pip_pkg
+    rm -rf /root/.cache
+
+# RUN rm -rf opt/tensorflow/pip_pkg
 
 # Install Horovod, temporarily using CUDA stubs
 RUN ldconfig /usr/local/cuda/targets/x86_64-linux/lib/stubs && \

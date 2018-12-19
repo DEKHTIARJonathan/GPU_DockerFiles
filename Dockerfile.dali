@@ -99,7 +99,7 @@ RUN cd /opt/ && \
       --enable-bsf=h264_mp4toannexb,hevc_mp4toannexb && \
     make -j"$(grep ^processor /proc/cpuinfo | wc -l)" && \
     make install && \
-    cd /opt/ && rm -rf ffmpeg-$FFMPEG_VERSION
+    rm -rf /opt/ffmpeg-$FFMPEG_VERSION
 
 # LibJPEG-Turbo
 RUN cd /opt/ && \
@@ -110,16 +110,16 @@ RUN cd /opt/ && \
     make -j"$(grep ^processor /proc/cpuinfo | wc -l)" install 2>&1 >/dev/null && \
     rm -rf /opt/libjpeg-turbo-${JPEG_TURBO_VERSION}
 
-ENV LD_LIBRARY_PATH="/tensorflow:${LD_LIBRARY_PATH}"
+ENV LD_LIBRARY_PATH="/opt/tensorflow:${LD_LIBRARY_PATH}"
 
 RUN git clone --branch=$DALI_BUILD_BRANCH --recursive https://github.com/NVIDIA/dali /opt/dali && \
     mkdir /opt/dali/build && cd /opt/dali/build && \
     cmake \
         -D CMAKE_INSTALL_PREFIX=. \
         -D BUILD_TENSORFLOW=${BUILD_DALI_FOR_TF} \
-        -D DALI_TF_SRCS="/tensorflow" \
+        -D DALI_TF_SRCS="/opt/tensorflow" \
         -D BUILD_PYTHON=ON \
         -D BUILD_LMDB=OFF  \
         .. && \
     make -j"$(nproc)" && \
-    pip install /opt/dali/build/dali/python
+    pip install --no-cache-dir --no-cache /opt/dali/build/dali/python
