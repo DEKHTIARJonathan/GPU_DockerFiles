@@ -112,7 +112,7 @@ RUN cd /opt/ && \
 
 ENV LD_LIBRARY_PATH="/opt/tensorflow:${LD_LIBRARY_PATH}"
 
-RUN sudo ldconfig -v | grep cuda
+RUN ldconfig -v | grep cuda
 
 RUN bash -c 'echo -e "   [-] LD_LIBRARY_PATH = $LD_LIBRARY_PATH"'
 
