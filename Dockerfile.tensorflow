@@ -81,7 +81,7 @@ RUN rm -f /etc/bazel.bazelrc && \
 #
 # ======== CUDA Compute Capabilities ========
 
-ENV LD_LIBRARY_PATH="/usr/local/lib:/usr/lib/x86_64-linux-gnu:/usr/local/cuda/extras/CUPTI/lib64" \
+ENV LD_LIBRARY_PATH='/usr/local/lib:/usr/lib/x86_64-linux-gnu:/usr/local/cuda/lib64/:/usr/local/cuda/extras/CUPTI/lib64' \
     BLAS_INCLUDE='/usr/local/cuda/targets/x86_64-linux/include' \
     BLAS_LIB='/usr/local/cuda/targets/x86_64-linux/lib' \
     CPLUS_INCLUDE_PATH='/usr/local/cuda/$CPLUS_INCLUDE_PATH' \
@@ -111,7 +111,7 @@ RUN rm -rf /opt/tensorflow && \
     rm -f /usr/local/cuda/lib64/stubs/libcuda.so.1 && \
     ln -s /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/stubs/libcuda.so.1 && \
     echo "/usr/local/cuda/lib64" > /etc/ld.so.conf.d/cuda.conf && \
-    echo "/usr/local/cuda/targets/x86_64-linux/lib/stubs" > /etc/ld.so.conf.d/cuda-10.0-stubs.conf && \
+    echo "/usr/local/cuda/targets/x86_64-linux/lib/stubs" > /etc/ld.so.conf.d/cuda-stubs.conf && \
     bazel clean && \
     ldconfig && \
     tensorflow/tools/ci_build/builds/configured GPU \

@@ -120,15 +120,15 @@ RUN git clone --branch=$DALI_BUILD_BRANCH --recursive https://github.com/NVIDIA/
     mkdir /opt/dali/build && cd /opt/dali/build && \
     rm -f /usr/local/cuda/lib64/stubs/libcuda.so.1 && \
     ln -s /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/stubs/libcuda.so.1 && \
-    ldconfig /usr/local/cuda/lib64/stubs/ && \
+    ldconfig
     cmake \
         -D CMAKE_INSTALL_PREFIX=. \
         -D BUILD_TENSORFLOW=${BUILD_DALI_FOR_TF} \
         -D DALI_TF_SRCS="/opt/tensorflow" \
         -D BUILD_PYTHON=ON \
         -D BUILD_LMDB=OFF  \
+        -D WERROR=OFF \
         .. && \
     make -j"$(nproc)" && \
     pip install --no-cache-dir --no-cache /opt/dali/build/dali/python && \
-    rm -f /usr/local/cuda/lib64/stubs/libcuda.so.1 && \
-    ldconfig
+    rm -f /usr/local/cuda/lib64/stubs/libcuda.so.1
