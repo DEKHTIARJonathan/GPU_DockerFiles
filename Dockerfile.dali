@@ -114,6 +114,9 @@ ENV LD_LIBRARY_PATH="/opt/tensorflow:${LD_LIBRARY_PATH}"
 
 RUN git clone --branch=$DALI_BUILD_BRANCH --recursive https://github.com/NVIDIA/dali /opt/dali && \
     mkdir /opt/dali/build && cd /opt/dali/build && \
+    rm -f /usr/local/cuda/lib64/stubs/libcuda.so.1 && \
+    ln -s /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/stubs/libcuda.so.1 && \
+    ldconfig && \
     cmake \
         -D CMAKE_INSTALL_PREFIX=. \
         -D BUILD_TENSORFLOW=${BUILD_DALI_FOR_TF} \
@@ -122,4 +125,5 @@ RUN git clone --branch=$DALI_BUILD_BRANCH --recursive https://github.com/NVIDIA/
         -D BUILD_LMDB=OFF  \
         .. && \
     make -j"$(nproc)" && \
-    pip install --no-cache-dir --no-cache /opt/dali/build/dali/python
+    pip install --no-cache-dir --no-cache /opt/dali/build/dali/python && \
+    rm -f /usr/local/cuda/lib64/stubs/libcuda.so.1
