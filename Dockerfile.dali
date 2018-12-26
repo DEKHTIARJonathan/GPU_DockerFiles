@@ -114,8 +114,6 @@ ENV LD_LIBRARY_PATH="/opt/tensorflow:${LD_LIBRARY_PATH}"
 
 RUN ldconfig -v | grep cuda
 
-RUN locate libcuda
-
 RUN bash -c 'echo -e "   [-] LD_LIBRARY_PATH = $LD_LIBRARY_PATH"'
 
 RUN git clone --branch=$DALI_BUILD_BRANCH --recursive https://github.com/NVIDIA/dali /opt/dali && \
