@@ -110,13 +110,11 @@ RUN cd /opt/ && \
     make -j"$(grep ^processor /proc/cpuinfo | wc -l)" install 2>&1 >/dev/null && \
     rm -rf /opt/libjpeg-turbo-${JPEG_TURBO_VERSION}
 
-ENV LD_LIBRARY_PATH="/opt/tensorflow:${LD_LIBRARY_PATH}"
-
 RUN ldconfig -v | grep cuda
 
 RUN bash -c 'echo -e "   [-] LD_LIBRARY_PATH = $LD_LIBRARY_PATH"'
 
-RUN export LD_LIBRARY_PATH='${LD_LIBRARY_PATH}:/usr/local/cuda/targets/x86_64-linux/lib/stubs:/opt/tensorflow' && \
+RUN export LD_LIBRARY_PATH='${LD_LIBRARY_PATH}:/usr/local/cuda/targets/x86_64-linux/lib:/usr/local/cuda/targets/x86_64-linux/lib/stubs:/opt/tensorflow' && \
     git clone --branch=$DALI_BUILD_BRANCH --recursive https://github.com/NVIDIA/dali /opt/dali && \
     mkdir /opt/dali/build && cd /opt/dali/build && \
     rm -f /usr/local/cuda/lib64/stubs/libcuda.so.1 && \
