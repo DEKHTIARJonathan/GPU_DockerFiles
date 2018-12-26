@@ -120,9 +120,9 @@ RUN bash -c 'echo -e "   [-] LD_LIBRARY_PATH = $LD_LIBRARY_PATH"'
 RUN export LD_LIBRARY_PATH='${LD_LIBRARY_PATH}:/usr/local/cuda/lib64/stubs:/usr/local/cuda/targets/x86_64-linux/lib:/usr/local/cuda/targets/x86_64-linux/lib/stubs:/opt/tensorflow' && \
     git clone --branch=$DALI_BUILD_BRANCH --recursive https://github.com/NVIDIA/dali /opt/dali && \
     mkdir /opt/dali/build && cd /opt/dali/build && \
-    rm -f /usr/local/lib/libcuda.so.1 && \
+    rm -f /usr/local/lib/libcuda.so && \
     rm -f /usr/local/cuda/lib64/stubs/libcuda.so.1 && \
-    ln -s /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/lib/libcuda.so.1 && \
+    ln -s /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/lib/libcuda.so && \
     ln -s /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/stubs/libcuda.so.1 && \
     ldconfig && \
     cmake \
@@ -135,5 +135,5 @@ RUN export LD_LIBRARY_PATH='${LD_LIBRARY_PATH}:/usr/local/cuda/lib64/stubs:/usr/
         .. && \
     make -j"$(nproc)" && \
     pip install --no-cache-dir --no-cache /opt/dali/build/dali/python && \
-    rm -f /usr/local/lib/libcuda.so.1 && \
+    rm -f /usr/local/lib/libcuda.so && \
     rm -f /usr/local/cuda/lib64/stubs/libcuda.so.1
