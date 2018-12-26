@@ -116,11 +116,12 @@ RUN ldconfig -v | grep cuda
 
 RUN bash -c 'echo -e "   [-] LD_LIBRARY_PATH = $LD_LIBRARY_PATH"'
 
-RUN git clone --branch=$DALI_BUILD_BRANCH --recursive https://github.com/NVIDIA/dali /opt/dali && \
+RUN export LD_LIBRARY_PATH='${LD_LIBRARY_PATH}:/usr/local/cuda/targets/x86_64-linux/lib/stubs:/opt/tensorflow' && \
+    git clone --branch=$DALI_BUILD_BRANCH --recursive https://github.com/NVIDIA/dali /opt/dali && \
     mkdir /opt/dali/build && cd /opt/dali/build && \
     rm -f /usr/local/cuda/lib64/stubs/libcuda.so.1 && \
     ln -s /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/stubs/libcuda.so.1 && \
-    ldconfig && \
+    ldconfig /usr/local/cuda/targets/x86_64-linux/lib/stubs && \
     cmake \
         -D CMAKE_INSTALL_PREFIX=. \
         -D BUILD_TENSORFLOW=${BUILD_DALI_FOR_TF} \
@@ -131,4 +132,5 @@ RUN git clone --branch=$DALI_BUILD_BRANCH --recursive https://github.com/NVIDIA/
         .. && \
     make -j"$(nproc)" && \
     pip install --no-cache-dir --no-cache /opt/dali/build/dali/python && \
+    ldconfig && \
     rm -f /usr/local/cuda/lib64/stubs/libcuda.so.1
