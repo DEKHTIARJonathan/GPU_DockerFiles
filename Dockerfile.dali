@@ -120,7 +120,7 @@ RUN git clone --branch=$DALI_BUILD_BRANCH --recursive https://github.com/NVIDIA/
     mkdir /opt/dali/build && cd /opt/dali/build && \
     rm -f /usr/local/cuda/lib64/stubs/libcuda.so.1 && \
     ln -s /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/stubs/libcuda.so.1 && \
-    ldconfig \
+    ldconfig && \
     cmake \
         -D CMAKE_INSTALL_PREFIX=. \
         -D BUILD_TENSORFLOW=${BUILD_DALI_FOR_TF} \
