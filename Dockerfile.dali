@@ -110,7 +110,6 @@ RUN cd /opt/ && \
     make -j"$(grep ^processor /proc/cpuinfo | wc -l)" install 2>&1 >/dev/null && \
     rm -rf /opt/libjpeg-turbo-${JPEG_TURBO_VERSION}
 
-
 RUN export LIBRARY_PATH=$LD_LIBRARY_PATH && \
     git clone --branch=$DALI_BUILD_BRANCH --recursive https://github.com/NVIDIA/dali /opt/dali && \
     mkdir /opt/dali/build && cd /opt/dali/build && \
