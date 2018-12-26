@@ -119,7 +119,6 @@ RUN export LD_LIBRARY_PATH='${LD_LIBRARY_PATH}:/usr/local/cuda/lib64/stubs:/usr/
     mkdir /opt/dali/build && cd /opt/dali/build && \
     rm -f /usr/local/cuda/lib64/stubs/libcuda.so.1 && \
     ln -s /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/stubs/libcuda.so.1 && \
-    ln -s /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/stubs/libcuda.so && \
     ln -s /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/libcuda.so && \
     ln -s /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/libcuda.so.1 && \
     ldconfig /usr/local/cuda/lib64/stubs && \
