@@ -67,7 +67,6 @@ docker build -t born2data/tensorflow:ubuntu16.04_cuda10.0_cudnn7.4.2_openmpi3.4.
   --build-arg TF_BUILD_BRANCH='r1.12' \
   --build-arg  TF_REPO='https://github.com/tensorflow/tensorflow.git' \
   --build-arg HOROVOD_VERSION='0.15.2' \
-  --no-cache \
   - < Dockerfile.tensorflow && \
 docker push born2data/tensorflow:ubuntu16.04_cuda10.0_cudnn7.4.2_openmpi3.4.1_hvd0.15.2_tf1.12.0
 
@@ -79,7 +78,6 @@ docker build -t born2data/tensorflow:ubuntu16.04_cuda10.0_cudnn7.4.2_openmpi3.4.
   --build-arg TF_BUILD_BRANCH='r1.13' \
   --build-arg  TF_REPO='https://github.com/tensorflow/tensorflow.git' \
   --build-arg HOROVOD_VERSION='0.15.2' \
-  --no-cache \
   - < Dockerfile.tensorflow && \
 docker push born2data/tensorflow:ubuntu16.04_cuda10.0_cudnn7.4.2_openmpi3.4.1_hvd0.15.2_tfr1.13
 
@@ -91,7 +89,6 @@ docker build -t born2data/tensorflow:ubuntu16.04_cuda10.0_cudnn7.4.2_openmpi3.4.
   --build-arg TF_BUILD_BRANCH='master' \
   --build-arg  TF_REPO='https://github.com/tensorflow/tensorflow.git' \
   --build-arg HOROVOD_VERSION='0.15.2' \
-  --no-cache \
   - < Dockerfile.tensorflow && \
 docker push born2data/tensorflow:ubuntu16.04_cuda10.0_cudnn7.4.2_openmpi3.4.1_hvd0.15.2_tfmaster
 
@@ -103,7 +100,6 @@ docker build -t born2data/tensorflow:ubuntu16.04_cuda10.0_cudnn7.4.2_openmpi3.4.
   --build-arg TF_BUILD_BRANCH='XLADeviceStreams' \
   --build-arg TF_REPO='https://github.com/DEKHTIARJonathan/tensorflow.git' \
   --build-arg HOROVOD_VERSION='0.15.2' \
-  --no-cache \
   - < Dockerfile.tensorflow && \
 docker push born2data/tensorflow:ubuntu16.04_cuda10.0_cudnn7.4.2_openmpi3.4.1_hvd0.15.2_tf_xla_fix
 ```
@@ -118,7 +114,6 @@ docker build -t born2data/tensorflow_gl:ubuntu16.04_cuda10.0_cudnn7.4.2_openmpi3
   --build-arg TF_BUILD_BRANCH='r1.12' \
   --build-arg TF_REPO='https://github.com/tensorflow/tensorflow.git' \
   --build-arg HOROVOD_VERSION='0.15.2' \
-  --no-cache \
   - < Dockerfile.tensorflow && \
 docker push born2data/tensorflow_gl:ubuntu16.04_cuda10.0_cudnn7.4.2_openmpi3.4.1_hvd0.15.2_tf1.12.0
 ```
@@ -133,15 +128,15 @@ docker push born2data/tensorflow_gl:ubuntu16.04_cuda10.0_cudnn7.4.2_openmpi3.4.1
 
 ## 4.1 On top of Tensorflow
 
+### 4.1.1 DALI v0.5.0
+
 ```shell
-## DALI v0.5.0
 
 docker build -t born2data/tensorflow_dali:ubuntu16.04_cuda10.0_cudnn7.4.2_openmpi3.4.1_hvd0.15.2_tf1.12.0_dali0.5.0  \
   --build-arg BASE_CONTAINER='tensorflow' \
   --build-arg BASE_CONTAINER_TAG='ubuntu16.04_cuda10.0_cudnn7.4.2_openmpi3.4.1_hvd0.15.2_tf1.12.0' \
   --build-arg DALI_BUILD_BRANCH='v0.5.0' \
   --build-arg BUILD_DALI_FOR_TF='ON' \
-  --no-cache \
   - < Dockerfile.dali && \
 docker push born2data/tensorflow_dali:ubuntu16.04_cuda10.0_cudnn7.4.2_openmpi3.4.1_hvd0.15.2_tf1.12.0_dali0.5.0
 
@@ -151,7 +146,6 @@ docker build -t born2data/tensorflow_dali:ubuntu16.04_cuda10.0_cudnn7.4.2_openmp
   --build-arg BASE_CONTAINER_TAG='ubuntu16.04_cuda10.0_cudnn7.4.2_openmpi3.4.1_hvd0.15.2_tfr1.13' \
   --build-arg DALI_BUILD_BRANCH='v0.5.0' \
   --build-arg BUILD_DALI_FOR_TF='ON' \
-  --no-cache \
   - < Dockerfile.dali && \
 docker push born2data/tensorflow_dali:ubuntu16.04_cuda10.0_cudnn7.4.2_openmpi3.4.1_hvd0.15.2_tfr1.13_dali0.5.0
 
@@ -161,7 +155,6 @@ docker build -t born2data/tensorflow_dali:ubuntu16.04_cuda10.0_cudnn7.4.2_openmp
   --build-arg BASE_CONTAINER_TAG='ubuntu16.04_cuda10.0_cudnn7.4.2_openmpi3.4.1_hvd0.15.2_tfmaster' \
   --build-arg DALI_BUILD_BRANCH='v0.5.0' \
   --build-arg BUILD_DALI_FOR_TF='ON' \
-  --no-cache \
   - < Dockerfile.dali && \
 docker push born2data/tensorflow_dali:ubuntu16.04_cuda10.0_cudnn7.4.2_openmpi3.4.1_hvd0.15.2_tfmaster_dali0.5.0
 
@@ -171,7 +164,6 @@ docker build -t born2data/tensorflow_dali:ubuntu16.04_cuda10.0_cudnn7.4.2_openmp
   --build-arg BASE_CONTAINER_TAG='ubuntu16.04_cuda10.0_cudnn7.4.2_openmpi3.4.1_hvd0.15.2_tf_xla_fix' \
   --build-arg DALI_BUILD_BRANCH='v0.5.0' \
   --build-arg BUILD_DALI_FOR_TF='ON' \
-  --no-cache \
   - < Dockerfile.dali && \
 docker push born2data/tensorflow_dali:ubuntu16.04_cuda10.0_cudnn7.4.2_openmpi3.4.1_hvd0.15.2_tf_xla_fix_dali0.5.0
 
@@ -181,18 +173,18 @@ docker build -t born2data/tensorflow_dali_gl:ubuntu16.04_cuda10.0_cudnn7.4.2_ope
   --build-arg BASE_CONTAINER_TAG='ubuntu16.04_cuda10.0_cudnn7.4.2_openmpi3.4.1_hvd0.15.2_tf1.12.0' \
   --build-arg DALI_BUILD_BRANCH='v0.5.0' \
   --build-arg BUILD_DALI_FOR_TF='ON' \
-  --no-cache \
   - < Dockerfile.dali && \
-docker push born2data/tensorflow_dali:ubuntu16.04_cuda10.0_cudnn7.4.2_openmpi3.4.1_hvd0.15.2_tf1.12.0_dali0.5.0
+docker push born2data/tensorflow_dali_gl:ubuntu16.04_cuda10.0_cudnn7.4.2_openmpi3.4.1_hvd0.15.2_tf1.12.0_dali0.5.0
+```
 
-## DALI v0.6.0
+### 4.1.2 DALI v0.6.0
 
+```
 docker build -t born2data/tensorflow_dali:ubuntu16.04_cuda10.0_cudnn7.4.2_openmpi3.4.1_hvd0.15.2_tf1.12.0_dali0.6.0  \
   --build-arg BASE_CONTAINER='tensorflow' \
   --build-arg BASE_CONTAINER_TAG='ubuntu16.04_cuda10.0_cudnn7.4.2_openmpi3.4.1_hvd0.15.2_tf1.12.0' \
   --build-arg DALI_BUILD_BRANCH='v0.6.0' \
   --build-arg BUILD_DALI_FOR_TF='ON' \
-  --no-cache \
   - < Dockerfile.dali && \
 docker push born2data/tensorflow_dali:ubuntu16.04_cuda10.0_cudnn7.4.2_openmpi3.4.1_hvd0.15.2_tf1.12.0_dali0.6.0
 
@@ -202,7 +194,6 @@ docker build -t born2data/tensorflow_dali:ubuntu16.04_cuda10.0_cudnn7.4.2_openmp
   --build-arg BASE_CONTAINER_TAG='ubuntu16.04_cuda10.0_cudnn7.4.2_openmpi3.4.1_hvd0.15.2_tfr1.13' \
   --build-arg DALI_BUILD_BRANCH='v0.6.0' \
   --build-arg BUILD_DALI_FOR_TF='ON' \
-  --no-cache \
   - < Dockerfile.dali && \
 docker push born2data/tensorflow_dali:ubuntu16.04_cuda10.0_cudnn7.4.2_openmpi3.4.1_hvd0.15.2_tfr1.13_dali0.6.0
 
@@ -212,7 +203,6 @@ docker build -t born2data/tensorflow_dali:ubuntu16.04_cuda10.0_cudnn7.4.2_openmp
   --build-arg BASE_CONTAINER_TAG='ubuntu16.04_cuda10.0_cudnn7.4.2_openmpi3.4.1_hvd0.15.2_tfmaster' \
   --build-arg DALI_BUILD_BRANCH='v0.6.0' \
   --build-arg BUILD_DALI_FOR_TF='ON' \
-  --no-cache \
   - < Dockerfile.dali && \
 docker push born2data/tensorflow_dali:ubuntu16.04_cuda10.0_cudnn7.4.2_openmpi3.4.1_hvd0.15.2_tfmaster_dali0.6.0
 
@@ -222,7 +212,6 @@ docker build -t born2data/tensorflow_dali:ubuntu16.04_cuda10.0_cudnn7.4.2_openmp
   --build-arg BASE_CONTAINER_TAG='ubuntu16.04_cuda10.0_cudnn7.4.2_openmpi3.4.1_hvd0.15.2_tf_xla_fix' \
   --build-arg DALI_BUILD_BRANCH='v0.6.0' \
   --build-arg BUILD_DALI_FOR_TF='ON' \
-  --no-cache \
   - < Dockerfile.dali && \
 docker push born2data/tensorflow_dali:ubuntu16.04_cuda10.0_cudnn7.4.2_openmpi3.4.1_hvd0.15.2_tf_xla_fix_dali0.6.0
 
@@ -232,9 +221,8 @@ docker build -t born2data/tensorflow_dali_gl:ubuntu16.04_cuda10.0_cudnn7.4.2_ope
   --build-arg BASE_CONTAINER_TAG='ubuntu16.04_cuda10.0_cudnn7.4.2_openmpi3.4.1_hvd0.15.2_tf1.12.0' \
   --build-arg DALI_BUILD_BRANCH='v0.6.0' \
   --build-arg BUILD_DALI_FOR_TF='ON' \
-  --no-cache \
   - < Dockerfile.dali && \
-docker push born2data/tensorflow_dali:ubuntu16.04_cuda10.0_cudnn7.4.2_openmpi3.4.1_hvd0.15.2_tf1.12.0_dali0.6.0
+docker push born2data/tensorflow_dali_gl:ubuntu16.04_cuda10.0_cudnn7.4.2_openmpi3.4.1_hvd0.15.2_tf1.12.0_dali0.6.0
 ```
 
 # 5. Launching the images
