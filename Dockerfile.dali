@@ -112,10 +112,9 @@ RUN cd /opt/ && \
 
 RUN git clone --branch=$DALI_BUILD_BRANCH --recursive https://github.com/NVIDIA/dali /opt/dali && \
     mkdir /opt/dali/build && cd /opt/dali/build && \
-    rm -f /usr/local/cuda/lib64/libcuda.so && \
-    ln -s /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/libcuda.so && \
-    echo "LD_LIBRARY_PATH = $LD_LIBRARY_PATH" && \
-    ldconfig /usr/local/cuda/lib64/ && \
+    rm -f /usr/local/lib/libcuda.so && \
+    ln -s /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/lib/libcuda.so && \
+    ldconfig && \
     cmake \
         -D CMAKE_INSTALL_PREFIX=. \
         -D BUILD_TENSORFLOW=${BUILD_DALI_FOR_TF} \
@@ -126,4 +125,4 @@ RUN git clone --branch=$DALI_BUILD_BRANCH --recursive https://github.com/NVIDIA/
         .. && \
     make -j"$(nproc)" && \
     pip install --no-cache-dir --no-cache /opt/dali/build/dali/python && \
-    rm -f /usr/local/cuda/lib64/libcuda.so
+    rm -f /usr/local/lib/libcuda.so
