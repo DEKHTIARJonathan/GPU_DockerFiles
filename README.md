@@ -97,7 +97,7 @@ docker build -t born2data/tensorflow:ubuntu16.04_cuda10.0_cudnn7.4.2_openmpi3.4.
   --build-arg BASE_CONTAINER='cudnn_openmpi' \
   --build-arg BASE_CONTAINER_TAG='ubuntu16.04_cuda10.0_cudnn7.4.2_openmpi3.4.1' \
   --build-arg BAZEL_VERSION='0.19.2' \
-  --build-arg TF_BUILD_BRANCH='XLADeviceStreams' \
+  --build-arg TF_BUILD_BRANCH='XLA_BugFix' \
   --build-arg TF_REPO='https://github.com/DEKHTIARJonathan/tensorflow.git' \
   --build-arg HOROVOD_VERSION='0.15.2' \
   - < Dockerfile.tensorflow && \
