@@ -126,7 +126,7 @@ RUN rm -rf /opt/tensorflow && \
 
 ARG HOROVOD_WITH_TENSORFLOW='1' \
     HOROVOD_WITHOUT_TENSORFLOW='' \
-    OMPI_MCA_btl_vader_single_copy_mechanism=none
+    OMPI_MCA_btl_vader_single_copy_mechanism='none'
 
 # Install Horovod, temporarily using CUDA stubs
 RUN ldconfig /usr/local/cuda/targets/x86_64-linux/lib/stubs && \
