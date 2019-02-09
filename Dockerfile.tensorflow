@@ -113,7 +113,7 @@ RUN rm -rf /opt/tensorflow && \
     bazel clean && \
     ldconfig && \
     tensorflow/tools/ci_build/builds/configured GPU \
-    bazel build -c opt --copt=-mavx --config=cuda \
+    bazel build -c opt --copt=-mavx --config=cuda --verbose \
         --cxxopt="-D_GLIBCXX_USE_CXX11_ABI=0" \
         --action_env=LD_LIBRARY_PATH=${LD_LIBRARY_PATH} \
         tensorflow/tools/pip_package:build_pip_package && \
